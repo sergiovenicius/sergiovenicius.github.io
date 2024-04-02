@@ -61,9 +61,9 @@ In podman, all commands are the same as in docker: podman build, podman push, po
 
 Below I put examples of the old and new jenkinsfiles (in the new Jenkinsfile I put some “debug” commands).
 
-Old way: [Pipeline](assets/old-pipeline.yaml)
+Old way: [Pipeline](https://github.com/sergiovenicius/sergiovenicius.github.io/blob/f9fd02d8753677157b38ccd33830fdf5829edb15/assets/old-pipeline.yaml)
 
-New way: [Pipeline](assets/new-pipeline.yaml)
+New way: [Pipeline](https://github.com/sergiovenicius/sergiovenicius.github.io/blob/f9fd02d8753677157b38ccd33830fdf5829edb15/assets/new-pipeline.yaml)
 
 
 Finally! It built and it was successful.
@@ -74,7 +74,7 @@ Attention point: At some point I chose to use the same Jenkins version that was 
 
 After some research about it, where I found a script using java jar file (but it didn’t work as it ran but was never importing to the new Jenkins), found an extension called Job Import Plugin, I ended up finding a script in stackoverflow (https://stackoverflow.com/a/75951838), using Jenkins REST API:
 
-[Script](assets/script-migration-jenkins.sh)
+[Script](https://github.com/sergiovenicius/sergiovenicius.github.io/blob/f9fd02d8753677157b38ccd33830fdf5829edb15/assets/script-migration-jenkins.sh)
 
 Took some time because it was 160 Jobs, but they were all ok.
 
