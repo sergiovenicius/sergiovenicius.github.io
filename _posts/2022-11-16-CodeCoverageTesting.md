@@ -16,9 +16,11 @@ There is the report, generated after the execution of the tests, which lists the
 Below some examples :)
 
 The report:
+
 ![The Report](/assets/report_code_coverage.png "Report")
 
 
 The guide:
+
 ![The Guide](/assets/guide_code_coverage.png "Guide")
 
