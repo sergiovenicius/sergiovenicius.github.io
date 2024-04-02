@@ -1,0 +1,85 @@
+pipeline {
+    environment {
+        EXEC_HELM = 'false'
+        EXEC_AWS_ECR = 'true'
+        EXEC_EKS_DEPLOY = 'true'
+        KIND_DEPLOY = 'api'
+        HELM_REPO = 'mongodb'
+        HELM_REPO_FERRAMENTA = 'bitnami'
+        URL_HELM_REPO = 'https://charts.bitnami.com/bitnami'
+        AWS_ACCOUNT_ID = 'aws_acc_number'
+        AWS_ACCESS_ID = 'aws_access_id'
+        AWS_SECRET_KEY = 'aws_secret_key'
+        AWS_PROFILE = 'prduser'
+        AWS_DEFAULT_REGION = 'us-east-1'
+        REPO_ECR = 'ecr-hub2b-us-east-1-p'
+        NAMENAMESPACE = 'app_namespace'
+        IMAGE_NAME_1 = 'app_name'
+        DOCKER_FILE_1 = 'dockerfile_name_to_be_used_in_the_build'
+    }
+
+    agent any
+    
+    stages 
+    {
+        stage('Connects to AWS ECR') 
+        {
+           steps 
+           {
+                sh 'aws configure set aws_access_key_id ${AWS_ACCESS_ID} --profile ${AWS_PROFILE}'
+                sh 'aws configure set aws_secret_access_key ${AWS_SECRET_KEY} --profile ${AWS_PROFILE}'
+                sh 'aws configure set default.region ${AWS_DEFAULT_REGION} --profile ${AWS_PROFILE}'
+                sh 'aws sts get-caller-identity --profile ${AWS_PROFILE}'
+                sh 'aws ecr get-login-password --region ${AWS_DEFAULT_REGION} --profile ${AWS_PROFILE} | podman login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com'  
+           }
+        }
+        
+        stage('Check connection to kubernetes') 
+        { 
+            steps 
+            {   
+                sh 'kubectl config view --minify'
+                sh 'aws configure list'
+                sh 'kubectl version'
+                sh 'kubectl get pods -l name=pipe_tem_helm -n ${EXEC_HELM}'
+                sh 'kubectl get pods -l name=pipe_tem_aws_ecr -n ${EXEC_AWS_ECR}'
+                sh 'kubectl get pods -l name=pipe_tem_deploy_eks -n ${EXEC_EKS_DEPLOY}'
+                sh 'kubectl get pods -l name=tipo_deploy -n ${KIND_DEPLOY}'
+                sh 'kubectl get nodes -o wide'
+            }
+        }
+        stage('Copy files to api folders') 
+        {
+           steps 
+           {
+                sh 'whoami'
+                sh 'pwd'
+                sh 'rsync -av --progress docker/ docker/${DOCKER_FILE_1} --exclude ${DOCKER_FILE_1}'
+           }
+        }
+        stage('Build new image from Dockerfile') 
+        {
+           steps 
+           {
+                sh 'podman ps'
+                sh 'podman images'
+                sh 'podman image prune --filter "until=3h" --force'
+                sh 'podman build --network host -t ${DOCKER_FILE_1}/${DOCKER_FILE_1}:v1 docker/${DOCKER_FILE_1}'
+           }
+        }
+        stage('Tag images') 
+        {
+           steps 
+           {
+                sh 'podman tag ${DOCKER_FILE_1}/${DOCKER_FILE_1}:v1 ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${REPO_ECR}:${IMAGE_NAME_1}-latest'
+           }
+        }
+        stage('Push images to AWS ECR') 
+        {
+           steps 
+           {
+                sh 'podman push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${REPO_ECR}:${IMAGE_NAME_1}-latest'
+           }
+        }
+    }
+}

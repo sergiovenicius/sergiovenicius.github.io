@@ -1,0 +1,85 @@
+pipeline {
+    agent 
+    {
+        kubernetes 
+        {
+            yamlFile 'jenkins/pod-deploy.yaml'
+        }
+    }
+    stages 
+    {
+        stage('Create Environment vars') 
+        { 
+            steps 
+            {   
+                container('agentpod') 
+                {   
+                    sh 'kubectl get pods -l name=pipe_tem_helm -n ${EXEC_HELM} '
+                    sh 'kubectl get pods -l name=pipe_tem_aws_ecr -n ${EXEC_AWS_ECR}'
+                    sh 'kubectl get pods -l name=pipe_tem_deploy_eks -n ${EXEC_EKS_DEPLOY}'
+                    sh 'kubectl get pods -l name=tipo_deploy -n ${KIND_DEPLOY}'
+                }
+            }
+        }
+
+        stage('Connects to AWS ECR') 
+        {
+           steps 
+           {
+                container('agentpod') 
+                {
+                    sh 'aws configure set aws_access_key_id ${AWS_ACCESS_ID} --profile ${AWS_PROFILE}'
+                    sh 'aws configure set aws_secret_access_key ${AWS_SECRET_KEY} --profile ${AWS_PROFILE}'
+                    sh 'aws configure set default.region ${AWS_DEFAULT_REGION} --profile ${AWS_PROFILE}'
+                    sh 'aws sts get-caller-identity --profile ${AWS_PROFILE}'
+                    sh 'aws ecr get-login-password --region ${AWS_DEFAULT_REGION} --profile ${AWS_PROFILE} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com'
+                }
+           }
+        }
+        stage('Copy files to api folders') 
+        {
+           steps 
+           {
+                container('agentpod') 
+                {
+                    sh 'apt update -y'
+                    sh 'apt install rsync grsync -y'
+                    sh 'rsync -av --progress docker/ docker/${DOCKER_FILE_1} --exclude ${DOCKER_FILE_1}'
+                }
+           }
+        }
+        stage('Build new image from Dockerfile') 
+        {
+           steps 
+           {
+                container('agentpod') 
+                {
+                    sh 'docker image prune --filter "until=3h" --force'
+                    sh 'docker images'
+                    sh 'docker build --network host -t ${DOCKER_FILE_1}/${DOCKER_FILE_1}:v1 docker/${DOCKER_FILE_1}'
+                }
+           }
+        }
+        stage('Tag images') 
+        {
+           steps 
+           {
+                container('agentpod') 
+                {
+                    sh 'docker tag ${DOCKER_FILE_1}/${DOCKER_FILE_1}:v1 ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${REPO_ECR}:${IMAGE_NAME_1}-latest'
+                }
+           }
+        }
+        stage('Push images to AWS ECR') 
+        {
+           steps 
+           {
+                container('agentpod') 
+                {
+                    sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${REPO_ECR}:${IMAGE_NAME_1}-latest'
+
+                }
+           }
+        }
+    }
+}
