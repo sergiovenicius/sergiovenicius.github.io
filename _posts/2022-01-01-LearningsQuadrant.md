@@ -16,7 +16,7 @@ Filling it is basically reflection and fitting.
 | -------- | ------- |
 | Be patient and accept to deal with things that are not in your control  | I don’t like having too many people depending on me.    |
 | Recognition does not fill your pocket |      |
-| -------- | ------- |
+
 | Learned to Do    | Learned that Don’t |
 | -------- | ------- |
 | Sometimes you have to make tough decisions to keep your finances, but even so, it’s important to keep doing what you like, with what you want (English and learning), while being rewarded financially  | Working long hours at a time *without* taking any minutes to rest    |
