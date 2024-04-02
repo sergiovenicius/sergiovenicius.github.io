@@ -4,8 +4,6 @@ date: 2017-01-01 00:00:00 -0300
 categories: [Thinking]
 tags: [Thinking]
 ---
-
-# Points about Problem/Solution analyzes
 *Published: 2017*
 
 These questions were a way I found to criticize systems analyzes that I did and that I will possibly do in the future. But I think it can be used in any problem and solution analysis.
