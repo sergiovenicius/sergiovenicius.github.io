@@ -21,7 +21,7 @@ So, how could we approach the resolution of technical debts? How could we balanc
 
 **Attacking Technical Debts**
 
-After reading some articles (https://www.infoq.com/news/2023/12/repaying-good-technical-debt/, https://verraes.net/2020/01/wall-of-technical-debt/, https://www.infoq.com/news/2024/03/tech-debt-software/), one of the best ways to deal with it is to be disciplined to handle it.
+After reading some articles [Repaying Good Technical Debt](https://www.infoq.com/news/2023/12/repaying-good-technical-debt/), [Wall of Technical Debt](https://verraes.net/2020/01/wall-of-technical-debt/), [Tech Debt Software](https://www.infoq.com/news/2024/03/tech-debt-software/), one of the best ways to deal with it is to be disciplined to handle it.
 Discipline is key to preventing accumulating technical debt. And in order to be disciplined you should make it difficult to ignore the debt. It is to make it visible. A good approach is to use a technical debt wall, which brings visibility. In the long term, high visibility results in frequent conversations about the tech debt inventory and what you are doing about it as a software organization.
 Not having any technical debt means liquidity, and liquidity means optionality. When you have optionality, you are available to deliver more value to the business. The problem isn’t technical debt; it’s unmanaged technical debt.
 
@@ -36,7 +36,7 @@ The reason for that is that you get the compound interest of the improvements da
 
 **But… how to prioritize the technical debt in the roadmap?**
 
-As we can read in this article (https://www.infoq.com/articles/getting-tech-debt-on-roadmap/), in the process of determining how to prioritize and schedule engineering tasks, it's crucial to shift our focus from the specifics of what needs to be done, such as database upgrades, to understanding why these tasks are essential and linking them back to business objectives. For instance, an engineer might argue for a database upgrade because it's reaching its end of life. However, the urgency becomes clear when considering business implications, like a hosting provider's refusal to support an outdated database, threatening the continuity of the product.
+As we can read in this article [Getting Tech Debt on Roadmap](https://www.infoq.com/articles/getting-tech-debt-on-roadmap/), in the process of determining how to prioritize and schedule engineering tasks, it's crucial to shift our focus from the specifics of what needs to be done, such as database upgrades, to understanding why these tasks are essential and linking them back to business objectives. For instance, an engineer might argue for a database upgrade because it's reaching its end of life. However, the urgency becomes clear when considering business implications, like a hosting provider's refusal to support an outdated database, threatening the continuity of the product.
 
 **Example:**
 
